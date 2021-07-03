@@ -1,0 +1,44 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: sammy
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: italianjob
+    container_name: italianjob-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./app:/var/www
+    networks:
+      - italianjob
+  db:
+    image: mysql:8.0
+    container_name: italianjob-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      #      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+      - ./docker-compose/mysql/data:/var/lib/mysql:rw
+    networks:
+      - italianjob
+  nginx:
+    image: nginx:1.21.0-alpine
+    container_name: italianjob-nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - ./app:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+    networks:
+      - italianjob
+networks:
+  italianjob:
+    driver: bridge
