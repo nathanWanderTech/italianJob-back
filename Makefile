@@ -27,5 +27,5 @@ composer-require:
 	composer require $(PACKAGE)
 
 artisan:
-	$(MAKE) app-exec
+	docker-compose exec app \
 	php artisan $(COMMAND)
