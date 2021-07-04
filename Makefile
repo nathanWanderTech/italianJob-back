@@ -24,8 +24,8 @@ composer-install:
 
 composer-require:
 	docker-compose exec app \
-	composer require $(PACKAGE)
+	composer require $(PKG)
 
 artisan:
 	docker-compose exec app \
-	php artisan $(COMMAND)
+	php artisan $(CMD)

@@ -16,7 +16,7 @@ class RegisterUserTest extends ApiTest
 
     protected string $uri = ApiRouteEnum::REGISTER_USER_ROUTE;
 
-    protected array $allowedMethods = ['POST'];
+    protected array $allowedMethods = [Request::METHOD_POST];
 
     public function test_not_allowed_method()
     {

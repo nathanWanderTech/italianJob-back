@@ -2,8 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\ResetPasswordRequest;
+use Exception;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Http\Client\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -14,7 +23,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'forgotPassword', 'resetPassword']]);
     }
 
     /**
@@ -25,7 +34,7 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $loginRequest): JsonResponse
     {
-        $credentials = request(['email', 'password']);
+        $credentials = $loginRequest->only(['email', 'password']);
 
         if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
@@ -80,5 +89,46 @@ class AuthController extends Controller
     public function refresh(): JsonResponse
     {
         return $this->respondWithToken(auth()->refresh());
+    }
+
+    /**
+     * @param ForgotPasswordRequest $forgotPasswordRequest
+     * @return JsonResponse
+     */
+    public function forgotPassword(ForgotPasswordRequest $forgotPasswordRequest): JsonResponse
+    {
+        $status = Password::sendResetLink($forgotPasswordRequest->only('email'));
+
+        if ($status !== Password::RESET_LINK_SENT) {
+            throw new Exception('Cannot send reset link to mail');
+        }
+
+        return response()->json([
+            'message' => 'Sent password reset link to email successfully',
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * @param ResetPasswordRequest $resetPasswordRequest
+     * @return JsonResponse
+     */
+    public function resetPassword(ResetPasswordRequest $resetPasswordRequest): JsonResponse
+    {
+        $status = Password::reset(
+            $resetPasswordRequest->only(['token', 'email', 'password']),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET ?
+            response()->json([], Response::HTTP_NO_CONTENT) :
+            response()->json(['message' => __($status)]);
     }
 }
