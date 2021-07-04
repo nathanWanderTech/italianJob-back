@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enum\ApiRouteEnum;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,7 +12,7 @@ class LoginTest extends ApiTest
 {
     use RefreshDatabase;
 
-    protected string $uri = "/api/auth/login";
+    protected string $uri = ApiRouteEnum::LOGIN_ROUTE;
 
     protected array $allowedMethods = [Request::METHOD_POST];
 

@@ -2,12 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Enum\ApiRouteEnum;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Request;
 
 class LogoutTest extends ApiTest
 {
-    protected string $uri = "/api/auth/logout";
+    use RefreshDatabase;
+
+    protected string $uri = ApiRouteEnum::LOGOUT_ROUTE;
 
     protected array $allowedMethods = [Request::METHOD_POST];
 
