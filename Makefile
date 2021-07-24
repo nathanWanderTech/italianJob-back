@@ -15,9 +15,6 @@ env-init:
 container-list:
 	docker-compose ps
 
-app-exec:
-	docker-compose exec app
-
 composer-install:
 	docker-compose exec app \
 	composer install
@@ -25,6 +22,10 @@ composer-install:
 composer-require:
 	docker-compose exec app \
 	composer require $(PKG)
+
+composer-remove:
+	docker-compose exec app \
+	composer remove $(PKG)
 
 artisan:
 	docker-compose exec app \

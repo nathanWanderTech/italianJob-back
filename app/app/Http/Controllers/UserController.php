@@ -28,12 +28,9 @@ class UserController extends Controller
      */
     public function store(RegisterUserRequest $registerUserRequest): User
     {
-        $request = $registerUserRequest->only(['name', 'email', 'password']);
-        $request['password'] = Hash::make($request['password']);
+        $input = $registerUserRequest->only(['name', 'email', 'password']);
+        $input['password'] = Hash::make($input['password']);
 
-        $user = new User($request);
-        $user->save();
-
-        return $user;
+        return User::create($input);
     }
 }

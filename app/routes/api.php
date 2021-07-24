@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => '/v1'], function() {
+Route::group(['prefix' => '/v1'], function () {
     Route::group([
         'middleware' => 'api',
         'prefix' => '/auth'
@@ -33,4 +34,6 @@ Route::group(['prefix' => '/v1'], function() {
     Route::group(['prefix' => '/users'], function () {
         Route::post('', [UserController::class, 'store']);
     });
+
+    Route::apiResource('vehicles', VehicleController::class);
 });
