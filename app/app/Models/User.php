@@ -7,6 +7,7 @@ use Eloquent;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -40,6 +41,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicle[] $vehicles
+ * @property-read int|null $vehicles_count
  */
 class User extends Authenticatable implements JWTSubject, CanResetPassword
 {
@@ -93,5 +96,10 @@ class User extends Authenticatable implements JWTSubject, CanResetPassword
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function vehicles(): HasMany
+    {
+        return $this->hasMany(Vehicle::class);
     }
 }

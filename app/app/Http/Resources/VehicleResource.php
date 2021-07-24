@@ -24,6 +24,7 @@ class VehicleResource extends JsonResource
             'last_petrol_refill' => $this->last_petrol_refill,
             'last_oil_change' => $this->last_oil_change,
             'last_maintenance' => $this->last_maintenance,
+            'owner_id' => $this->owner_id,
         ];
     }
 }

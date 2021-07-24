@@ -17,7 +17,7 @@ class CreateVehiclesTable extends Migration
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('brand');
             $table->integer('total_traveled_distance')->default(0);
             $table->integer('daily_traveled_distance')->default(0);

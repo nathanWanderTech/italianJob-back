@@ -30,3 +30,7 @@ composer-remove:
 artisan:
 	docker-compose exec app \
 	php artisan $(CMD)
+
+reseed:
+	$(MAKE) artisan CMD=migrate:fresh
+	$(MAKE) artisan CMD=db:seed

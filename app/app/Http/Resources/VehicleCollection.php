@@ -2,20 +2,20 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Collection;
 
 class VehicleCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
+     * @param Request $request
+     * @return Collection
      */
     public function toArray($request)
     {
-        return [
-            'data' => $this->collection,
-        ];
+        return $this->collection;
     }
 }

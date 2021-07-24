@@ -8,9 +8,9 @@ use App\Http\Resources\VehicleCollection;
 use App\Http\Resources\VehicleResource;
 use App\Models\Vehicle;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-// TODO: add authorize, just owner of vehicle can index, show, delete, update that vehicle.
 class VehicleController extends Controller
 {
     /**
@@ -20,7 +20,10 @@ class VehicleController extends Controller
      */
     public function index(): VehicleCollection
     {
-        return new VehicleCollection(Vehicle::all());
+        return new VehicleCollection(
+            Vehicle::whereOwnerId(Auth::user()->id)
+                ->get()
+        );
     }
 
     /**
@@ -31,6 +34,7 @@ class VehicleController extends Controller
      */
     public function store(CreateVehicleRequest $createVehicleRequest)
     {
+        $currentUser = Auth::user();
         $input = $createVehicleRequest->only([
             'name',
             'brand',
@@ -40,6 +44,8 @@ class VehicleController extends Controller
             'last_oil_change',
             'last_maintenance',
         ]);
+        $input['owner_id'] = $currentUser->id;
+
         Vehicle::create($input);
 
         return response()->json(status: Response::HTTP_CREATED);
@@ -53,6 +59,7 @@ class VehicleController extends Controller
      */
     public function show(Vehicle $vehicle): VehicleResource
     {
+        $this->authorize('view', $vehicle);
         return new VehicleResource($vehicle);
     }
 
@@ -65,6 +72,7 @@ class VehicleController extends Controller
      */
     public function update(Vehicle $vehicle, UpdateVehicleRequest $updateVehicleRequest): \Illuminate\Http\JsonResponse
     {
+        $this->authorize('update', $vehicle);
         $vehicle->update(
             $updateVehicleRequest->only([
                 'name',
@@ -88,6 +96,7 @@ class VehicleController extends Controller
      */
     public function destroy(Vehicle $vehicle): \Illuminate\Http\JsonResponse
     {
+        $this->authorize('delete', $vehicle);
         $vehicle->delete();
 
         return response()->json(status: Response::HTTP_NO_CONTENT);

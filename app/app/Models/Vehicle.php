@@ -6,6 +6,7 @@ use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
@@ -35,6 +36,9 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Vehicle whereTotalTraveledDistance($value)
  * @method static Builder|Vehicle whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property int $owner_id
+ * @property-read \App\Models\User $user
+ * @method static Builder|Vehicle whereOwnerId($value)
  */
 class Vehicle extends Model
 {
@@ -48,5 +52,11 @@ class Vehicle extends Model
         'last_petrol_refill',
         'last_oil_change',
         'last_maintenance',
+        'owner_id',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

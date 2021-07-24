@@ -35,5 +35,7 @@ Route::group(['prefix' => '/v1'], function () {
         Route::post('', [UserController::class, 'store']);
     });
 
-    Route::apiResource('vehicles', VehicleController::class);
+    Route::group(['middleware' => 'auth'], function () {
+        Route::apiResource('vehicles', VehicleController::class);
+    });
 });
