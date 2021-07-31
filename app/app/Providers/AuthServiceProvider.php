@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Reminder;
+use App\Models\Vehicle;
+use App\Policies\ReminderPolicy;
+use App\Policies\VehiclePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -13,8 +16,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
-        'App\Models\Vehicle' => 'App\Policies\VehiclePolicy'
+        Vehicle::class => VehiclePolicy::class,
+        Reminder::class => ReminderPolicy::class,
     ];
 
     /**
@@ -25,7 +28,6 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
         //
     }
 }

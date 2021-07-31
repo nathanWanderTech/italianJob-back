@@ -27,6 +27,10 @@ composer-remove:
 	docker-compose exec app \
 	composer remove $(pkg)
 
+composer-update:
+	docker-compose exec app \
+	composer update
+
 artisan:
 	docker-compose exec app \
 	php artisan $(cmd)

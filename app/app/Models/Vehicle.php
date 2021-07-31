@@ -40,6 +40,9 @@ use Illuminate\Support\Carbon;
  * @property int $owner_id
  * @property-read User $user
  * @method static Builder|Vehicle whereOwnerId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reminder[] $reminders
+ * @property-read int|null $reminders_count
+ * @method static \Database\Factories\VehicleFactory factory(...$parameters)
  */
 class Vehicle extends Model
 {
