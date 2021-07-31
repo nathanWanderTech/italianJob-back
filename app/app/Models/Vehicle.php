@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -37,7 +38,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Vehicle whereUpdatedAt($value)
  * @mixin Eloquent
  * @property int $owner_id
- * @property-read \App\Models\User $user
+ * @property-read User $user
  * @method static Builder|Vehicle whereOwnerId($value)
  */
 class Vehicle extends Model
@@ -49,14 +50,16 @@ class Vehicle extends Model
         'brand',
         'total_traveled_distance',
         'daily_traveled_distance',
-        'last_petrol_refill',
-        'last_oil_change',
-        'last_maintenance',
         'owner_id',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function reminders(): HasMany
+    {
+        return $this->hasMany(Reminder::class);
     }
 }
