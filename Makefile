@@ -21,16 +21,20 @@ composer-install:
 
 composer-require:
 	docker-compose exec app \
-	composer require $(PKG)
+	composer require $(pkg)
 
 composer-remove:
 	docker-compose exec app \
-	composer remove $(PKG)
+	composer remove $(pkg)
+
+composer-update:
+	docker-compose exec app \
+	composer update
 
 artisan:
 	docker-compose exec app \
-	php artisan $(CMD)
+	php artisan $(cmd)
 
 reseed:
-	$(MAKE) artisan CMD=migrate:fresh
-	$(MAKE) artisan CMD=db:seed
+	$(MAKE) artisan cmd=migrate:fresh
+	$(MAKE) artisan cmd=db:seed

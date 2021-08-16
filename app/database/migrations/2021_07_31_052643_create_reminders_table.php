@@ -1,12 +1,10 @@
 <?php
 
-use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVehiclesTable extends Migration
+class CreateRemindersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,13 +13,15 @@ class CreateVehiclesTable extends Migration
      */
     public function up()
     {
-        Schema::create('vehicles', function (Blueprint $table) {
+        Schema::create('reminders', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('brand');
-            $table->integer('total_traveled_distance')->default(0);
-            $table->integer('daily_traveled_distance')->default(0);
+            $table->date('last_remind')->nullable();
+            $table->date('next_remind')->nullable();
+            $table->integer('interval');
+            $table->unsignedBigInteger('vehicle_id');
             $table->timestamps();
+            $table->foreign('vehicle_id')->references('id')->on('vehicles');
         });
     }
 
@@ -32,6 +32,6 @@ class CreateVehiclesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vehicles');
+        Schema::dropIfExists('reminders');
     }
 }

@@ -35,15 +35,14 @@ class VehicleController extends Controller
     public function store(CreateVehicleRequest $createVehicleRequest)
     {
         $currentUser = Auth::user();
-        $input = $createVehicleRequest->only([
-            'name',
-            'brand',
-            'total_traveled_distance',
-            'daily_traveled_distance',
-            'last_petrol_refill',
-            'last_oil_change',
-            'last_maintenance',
-        ]);
+        $input = $createVehicleRequest->only(
+            [
+                'name',
+                'brand',
+                'total_traveled_distance',
+                'daily_traveled_distance',
+            ]
+        );
         $input['owner_id'] = $currentUser->id;
 
         Vehicle::create($input);
@@ -60,6 +59,7 @@ class VehicleController extends Controller
     public function show(Vehicle $vehicle): VehicleResource
     {
         $this->authorize('view', $vehicle);
+
         return new VehicleResource($vehicle);
     }
 
@@ -73,19 +73,20 @@ class VehicleController extends Controller
     public function update(Vehicle $vehicle, UpdateVehicleRequest $updateVehicleRequest): \Illuminate\Http\JsonResponse
     {
         $this->authorize('update', $vehicle);
-        $vehicle->update(
-            $updateVehicleRequest->only([
+        $input = $updateVehicleRequest->only(
+            [
                 'name',
                 'brand',
                 'total_traveled_distance',
                 'daily_traveled_distance',
-                'last_petrol_refill',
-                'last_oil_change',
-                'last_maintenance',
-            ])
+            ]
         );
 
-        return response()->json(status: Response::HTTP_NO_CONTENT);
+        return response()->json(
+            status: $vehicle->update($input) ?
+            Response::HTTP_NO_CONTENT :
+            Response::HTTP_INTERNAL_SERVER_ERROR
+        );
     }
 
     /**
@@ -97,8 +98,11 @@ class VehicleController extends Controller
     public function destroy(Vehicle $vehicle): \Illuminate\Http\JsonResponse
     {
         $this->authorize('delete', $vehicle);
-        $vehicle->delete();
 
-        return response()->json(status: Response::HTTP_NO_CONTENT);
+        return response()->json(
+            status: $vehicle->delete() ?
+            Response::HTTP_NO_CONTENT :
+            Response::HTTP_INTERNAL_SERVER_ERROR
+        );
     }
 }

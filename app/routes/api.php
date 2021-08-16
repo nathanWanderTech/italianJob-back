@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ReminderController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Support\Facades\Route;
@@ -16,26 +17,39 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => '/v1'], function () {
-    Route::group([
-        'middleware' => 'api',
-        'prefix' => '/auth'
-    ], function () {
-        Route::post('login', [AuthController::class, 'login']);
-        Route::post('logout', [AuthController::class, 'logout']);
-        Route::post('refresh', [AuthController::class, 'refresh']);
-        Route::post('me', [AuthController::class, 'me']);
-        Route::post('forgot-password', [AuthController::class, 'forgotPassword'])
-            ->name('password.request');
-        Route::post('reset-password', [AuthController::class, 'resetPassword'])
-            ->name('password.reset');
-    });
+Route::group(
+    ['prefix' => '/v1'],
+    function () {
+        Route::group(
+            [
+                'middleware' => 'api',
+                'prefix' => '/auth',
+            ],
+            function () {
+                Route::post('login', [AuthController::class, 'login']);
+                Route::post('logout', [AuthController::class, 'logout']);
+                Route::post('refresh', [AuthController::class, 'refresh']);
+                Route::post('me', [AuthController::class, 'me']);
+                Route::post('forgot-password', [AuthController::class, 'forgotPassword'])
+                    ->name('password.request');
+                Route::post('reset-password', [AuthController::class, 'resetPassword'])
+                    ->name('password.reset');
+            }
+        );
 
-    Route::group(['prefix' => '/users'], function () {
-        Route::post('', [UserController::class, 'store']);
-    });
+        Route::group(
+            ['prefix' => '/users'],
+            function () {
+                Route::post('', [UserController::class, 'store']);
+            }
+        );
 
-    Route::group(['middleware' => 'auth'], function () {
-        Route::apiResource('vehicles', VehicleController::class);
-    });
-});
+        Route::group(
+            ['middleware' => 'auth'],
+            function () {
+                Route::apiResource('vehicles', VehicleController::class);
+                Route::apiResource('vehicles.reminders', ReminderController::class);
+            }
+        );
+    }
+);

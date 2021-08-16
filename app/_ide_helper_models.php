@@ -12,6 +12,17 @@
 
 namespace App\Models{
 /**
+ * App\Models\Reminder
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Reminder newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reminder newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reminder query()
+ */
+	class Reminder extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\User
  *
  * @property int $id
@@ -37,6 +48,8 @@ namespace App\Models{
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Vehicle[] $vehicles
+ * @property-read int|null $vehicles_count
  */
 	class User extends \Eloquent implements \Tymon\JWTAuth\Contracts\JWTSubject {}
 }
@@ -69,6 +82,9 @@ namespace App\Models{
  * @method static Builder|Vehicle whereTotalTraveledDistance($value)
  * @method static Builder|Vehicle whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property int $owner_id
+ * @property-read \App\Models\User $user
+ * @method static Builder|Vehicle whereOwnerId($value)
  */
 	class Vehicle extends \Eloquent {}
 }

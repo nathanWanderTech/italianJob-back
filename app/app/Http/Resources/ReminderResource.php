@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class VehicleResource extends JsonResource
+class ReminderResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -13,15 +13,14 @@ class VehicleResource extends JsonResource
      * @param Request $request
      * @return array
      */
-    public function toArray($request): array
+    public function toArray($request)
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'brand' => $this->brand,
-            'total_traveled_distance' => $this->total_traveled_distance,
-            'daily_traveled_distance' => $this->daily_traveled_distance,
-            'owner_id' => $this->owner_id,
+            'last_remind' => $this->last_remind,
+            'next_remind' => $this->next_remind,
+            'interval' => $this->interval,
         ];
     }
 }
